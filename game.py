@@ -1,3 +1,6 @@
+from sys import stderr
+
+
 class Move:
     """"Class to encapsulate the data needed for a move"""
 
@@ -27,7 +30,7 @@ class Board:
                     print("")
 
     def make_move(self, move: Move) -> bool:
-        """Places either an X or O at the copordinates (x, y). The value
+        """Places either an X or O at the coordinates (x, y). The value
         parameter determines whether an X or O is placed.
         If there is already a value a (x, y), then this returns false, otherwise it returns true."""
         if self.state[move.x][move.y] != ' ':
@@ -61,7 +64,7 @@ class Player:
     """A player has a token which determines whether they will place down an X or an O. Player 1 has X and
     player 2 has O."""
 
-    def __init__(self, player_number : int):
+    def __init__(self, player_number: int):
         if player_number == 1:
             self.token = 'X'
         else:
@@ -76,10 +79,14 @@ class Player:
 
     @staticmethod
     def __get_input(coordinate: str) -> int:
-        x = int(input("Please enter the {0}-coordinate you want to place your token at: ".format(coordinate)))
-        while not isinstance(x, int):
-            print("Please enter a number")
-            x = input("Please enter the {0}-coordinate you want to place your token at: ".format(coordinate))
+        while True:
+            try:
+                x = int(input("Please enter the {0}-coordinate you want to place your token at: ".format(coordinate)))
+                # want to leave the loop if x is an integer and between 0 and 2
+                if 0 <= x <= 2:
+                    break
+            except ValueError:
+                print("Please enter a number between 0 and 2 for the {0}-coordinate".format(coordinate))
         return x
 
     @staticmethod
@@ -91,6 +98,7 @@ class Player:
 
 class Game:
     """Allows two human users to play a game of tic-tac-toe."""
+
     @staticmethod
     def play_tic_tac_toe():
         p1 = Player(1)
